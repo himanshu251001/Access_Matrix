@@ -33,7 +33,7 @@ const Topbar = ({ theme, setTheme, onMenuClick }) => {
     setLoadingUsers(true);
     const delayDebounceFn = setTimeout(async () => {
       try {
-        const res = await apiFetch(`/api/employee/search?value=${searchQuery}`);
+        const res = await apiFetch(`/api/employee/search?value=${encodeURIComponent(searchQuery)}`);
         if (res && res.ok) {
           const response = await res.json();
           setSearchResults(response.data || []);
@@ -184,7 +184,7 @@ const Topbar = ({ theme, setTheme, onMenuClick }) => {
         {!loading && !user?.isImpersonation && (
           <button
             onClick={logout}
-            className="btn bg-base-100 btn-sm shadow-xs flex items-center gap-2 text-red-500 hover:bg-red-400 text-base-100/90 hover:text-bg-base-100"
+            className="btn bg-base-100 btn-sm shadow-xs flex items-center gap-2 text-red-500 hover:bg-red-400 text-base-100/90 hover:text-base-100"
             title="Logout"
           >
             <LogOut size={18} />

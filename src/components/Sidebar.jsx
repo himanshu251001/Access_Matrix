@@ -20,7 +20,6 @@ export default function Sidebar({ bgColor = "bg-base-300", isOpen, onClose }) {
         const response = await res.json();
 
         setViews(Array.isArray(response.data.views) ? response.data.views : []);
-        console.log("Fetched views:", response.data.views);
         if (response.data.department) setDepartment(response.data.department);
       } catch {
         setViews(["employee"]);

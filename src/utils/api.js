@@ -18,7 +18,6 @@ export async function apiFetch(path, options = {}) {
             credentials: "include",
             headers: Helper.buildHeaders(token, options.headers),
         });
-        console.log(`API ${options.method || "GET"} ${url} - Status: ${res.status}`,res);
 
         if (res.status === 401) {
             // Token may have just expired — attempt one refresh

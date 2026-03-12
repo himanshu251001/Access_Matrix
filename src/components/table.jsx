@@ -29,7 +29,6 @@ const Table = ({ endpoint }) => {
                 .then(async (res) => {
                     if (!res || !res.ok) throw new Error("Failed to fetch data");
                     const arr = await res.json();
-                    console.log("Fetched data:", arr.data);
                     setData(arr.data || []);
                     if (arr.data.length > 0) {
                         setColumns(Object.keys(arr.data[0]));
@@ -135,7 +134,6 @@ const Table = ({ endpoint }) => {
                     currentPage={currentPage}
                     totalPages={totalPages}
                     pageSize={pageSize}
-                    totalRecords={data.length}
                     onPageChange={handlePageChange}
                     onPageSizeChange={handlePageSizeChange}
                 />

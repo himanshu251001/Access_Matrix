@@ -15,7 +15,6 @@ export default function Dashboard() {
   return (
     <>
       <div className="bg-base-100 rounded-xl p-6 flex items-center gap-5 shadow-sm">
-        {console.log("User in Dashboard:", user) /* Debugging line to check user data */}
         <div className="w-14 h-14 rounded-full bg-blue-700 text-white flex items-center justify-center text-2xl font-bold shrink-0">
           {user?.full_name?.charAt(0).toUpperCase() || "?"}
         </div>

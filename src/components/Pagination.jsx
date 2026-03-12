@@ -1,6 +1,6 @@
 import React from "react";
 
-const Pagination = ({ currentPage, totalPages, pageSize, totalRecords, onPageChange, onPageSizeChange }) => {
+const Pagination = ({ currentPage, totalPages, pageSize, onPageChange, onPageSizeChange }) => {
     const getPageNumbers = () => {
         const windowSize = 5;
         let start = Math.max(1, currentPage - 2);
@@ -52,7 +52,7 @@ const Pagination = ({ currentPage, totalPages, pageSize, totalRecords, onPageCha
             </div>
 
             <div className="bg-[#eef3ff] p-2 sm:py-2 sm:px-5 rounded-lg text-sm">
-               <span className="font-bold">Page Size:</span> 
+                <span className="font-bold">Page Size:</span>
                 <select
                     className="ml-2 border rounded px-2 py-1"
                     value={pageSize}

@@ -16,7 +16,6 @@ export const UserProvider = ({ children }) => {
 
                 if (res && res.ok) {
                     const json = await res.json();
-                    console.log("Fetched user profile:", json);
                     setUser(json?.data || json);
                 }
             } catch (error) {
