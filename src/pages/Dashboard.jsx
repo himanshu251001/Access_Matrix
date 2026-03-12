@@ -1,24 +1,21 @@
 // pages/Dashboard.jsx
-import { useEffect, useState } from "react";
-import { apiFetch } from "../utils/api";
+import { useUser } from "../context/UserContext";
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null);
+  const { user,loading } = useUser();
 
-  useEffect(() => {
-    apiFetch("/api/employee/profile")
-      .then(async (res) => {
-        if (!res || !res.ok) return;
-        const json = await res.json();
-        console.log("User Profile:", json);
-        setUser(json?.data || json);
-      })
-      .catch(() => { });
-  }, []);
+  if (loading) {
+    return (
+        <div className="flex justify-center items-center h-48">
+            <span className="loading loading-spinner text-primary loading-lg"></span>
+        </div>
+    );
+  }
 
   return (
     <>
       <div className="bg-base-100 rounded-xl p-6 flex items-center gap-5 shadow-sm">
+        {console.log("User in Dashboard:", user) /* Debugging line to check user data */}
         <div className="w-14 h-14 rounded-full bg-blue-700 text-white flex items-center justify-center text-2xl font-bold shrink-0">
           {user?.full_name?.charAt(0).toUpperCase() || "?"}
         </div>
@@ -37,6 +34,7 @@ export default function Dashboard() {
               <span className="font-medium text-base-content">Role: </span>
               {user?.role?.toUpperCase() || "—"}
             </div>
+            
           </div>
         </div>
       </div>

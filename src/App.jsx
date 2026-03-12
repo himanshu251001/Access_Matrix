@@ -24,7 +24,8 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout theme={theme} setTheme={setTheme} />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/table" element={<Table />} />
+              <Route path="/organization" element={<Table endpoint="/api/organization" />} />
+              <Route path="/teams" element={<Table endpoint="/api/organization/teams" />} />
               <Route path="/forbidden" element={<Forbidden />} />
             </Route>
           </Route>
