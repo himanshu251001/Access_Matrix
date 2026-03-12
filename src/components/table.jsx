@@ -23,27 +23,31 @@ const Table = ({ endpoint }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-            await apiFetch(endpoint)
-                .then(async (res) => {
-                    if (!res || !res.ok) throw new Error("Failed to fetch data");
-                    const arr = await res.json();
-                    setData(arr.data || []);
-                    if (arr.data.length > 0) {
-                        setColumns(Object.keys(arr.data[0]));
-                    } else {
-                        setColumns([]);
-                    }
-                })
-                .catch((err) => {
-                    setError(err.message || "Unknown error");
-                })
-                .finally(() => setLoading(false));
+            try {
+                setLoading(true);
+                setError(null);
+
+                const res = await apiFetch(endpoint);
+
+                if (!res || !res.ok) {
+                    throw new Error("Failed to fetch data");
+                }
+
+                const arr = await res.json();
+                const data = arr.data || [];
+
+                setData(data);
+                setColumns(data.length ? Object.keys(data[0]) : []);
+            } catch (err) {
+                setError(err.message || "Unknown error");
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchData();
         setCurrentPage(1);
+
     }, [endpoint]);
 
     const totalPages = Math.max(1, Math.ceil(data.length / pageSize));
