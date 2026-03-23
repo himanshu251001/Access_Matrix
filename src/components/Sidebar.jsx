@@ -1,14 +1,16 @@
 import {
-  User, UserCog, Building2, X
+  User, X, Users, Building2
 } from "lucide-react";
 import SidebarItem from "./SidebarItem";
 
 import React, { useEffect, useState } from "react";
 import { apiFetch } from "../utils/api";
+import { useUser } from "../context/UserContext";
 
 export default function Sidebar({ bgColor = "bg-base-300", isOpen, onClose }) {
   const [views, setViews] = useState([]);
   const [department, setDepartment] = useState("");
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchViews = async () => {
@@ -16,6 +18,7 @@ export default function Sidebar({ bgColor = "bg-base-300", isOpen, onClose }) {
         const res = await apiFetch("/api/employee/views");
         if (!res || !res.ok) throw new Error("Failed to fetch views");
         const response = await res.json();
+
         setViews(Array.isArray(response.data.views) ? response.data.views : []);
         if (response.data.department) setDepartment(response.data.department);
       } catch {
@@ -52,26 +55,19 @@ export default function Sidebar({ bgColor = "bg-base-300", isOpen, onClose }) {
 
         <ul className="menu gap-2 border-t-2 border-base-200 px-4 py-4 w-full">
           <SidebarItem icon={User} label="Dashboard" to="/dashboard" onClick={onClose} />
-          {views.includes("employee") && (
-            <SidebarItem icon={User} label="Employee" to="/table?view=employee" onClick={onClose} />
-          )}
-          {views.includes("manager") && (
-            <SidebarItem icon={UserCog} label="Manager" to="/table?view=manager" onClick={onClose} />
-          )}
-          {views.includes("director") && (
-            <SidebarItem icon={Building2} label="Director" to="/table?view=director" onClick={onClose} />
+          <SidebarItem icon={Building2} label="Organization" to="/organization" onClick={onClose} />
+          {views.includes("teams") && (
+            <SidebarItem icon={Users} label="Teams" to="/teams" onClick={onClose} />
           )}
         </ul>
 
         <div className="mt-auto flex items-center gap-3 pt-4 p-2 border-t-2 border-base-200">
-          <div className="avatar">
-            <div className="w-10 rounded-full">
-              <img src="https://i.pravatar.cc/101" alt="profile" />
-            </div>
+          <div className="avatar bg-primary text-primary-content rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg">
+            {user?.full_name?.charAt(0).toUpperCase() || "?"}
           </div>
-          <div>
-            <p className="text-sm font-medium">James P.</p>
-            <p className="text-xs text-base-content/60">james@email.com</p>
+          <div className="overflow-hidden">
+            <p className="text-sm font-medium truncate">{user?.full_name || "—"}</p>
+            <p className="text-xs text-base-content/60 truncate">{user?.email || "—"}</p>
           </div>
         </div>
       </aside>

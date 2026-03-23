@@ -1,16 +1,22 @@
-let accessToken = null;
+const ACCESS_TOKEN_KEY = "accessToken";
 
 export function setAccessToken(token) {
-    accessToken = token;
+    if (token) {
+        localStorage.setItem(ACCESS_TOKEN_KEY, token);
+    }
+    else{
+        localStorage.removeItem(ACCESS_TOKEN_KEY);
+    }
 }
 
 export function getAccessToken() {
-    return accessToken;
+    return localStorage.getItem(ACCESS_TOKEN_KEY);
+
 }
 
-/** Clears the in-memory access token (call on logout). */
+// onLogout
 export function clearAccessToken() {
-    accessToken = null;
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
 }
 
 export async function logout() {
