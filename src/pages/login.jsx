@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { setAccessToken } from "../auth";
+import { useForm } from "react-hook-form";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (formData) => {
     setError("");
     const apiUrl = import.meta.env.VITE_API_URL || "localhost:3000";
 
@@ -17,30 +16,20 @@ function Login() {
       const res = await fetch(`http://${apiUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(formData),
         credentials: "include",
       });
-      const text = await res.text();
+
+      const data = await res.json().catch(() => null);
       if (res.ok) {
-        let token = null;
-        try {
-          const data = JSON.parse(text);
-          token = data.accessToken || null;
-        } catch { }
+        let token = data?.accessToken || null;
         if (token) {
           setAccessToken(token);
         }
+        reset();
         navigate("/dashboard");
       } else {
-        let message = "Login failed";
-        if (text) {
-          try {
-            const data = JSON.parse(text);
-            message = data.message || message;
-          } catch {
-            message = text;
-          }
-        }
+        const message = data?.message || "Login failed";
         setError(message);
       }
     } catch (err) {
@@ -70,7 +59,7 @@ function Login() {
             <p className="text-gray-600 mb-6 font-medium ">
               Sign into your account
             </p>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
                 <label
                   htmlFor="email"
@@ -83,11 +72,12 @@ function Login() {
                   id="email"
                   placeholder="Enter email"
                   autoComplete="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  {...register("email", { required: "Email is required" })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-100 text-gray-800 focus:outline-none focus:ring-2  focus:ring-offset-1 placeholder:text-gray-400 focus:ring-gray-400"
-                  required
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                )}
               </div>
 
               <div className="mb-4">
@@ -101,11 +91,12 @@ function Login() {
                   id="password"
                   placeholder="Enter password"
                   autoComplete="current-password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  {...register("password", { required: "Password is required" })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-md bg-gray-100 text-gray-800 focus:outline-none focus:ring-2  focus:ring-offset-1 placeholder:text-gray-400 focus:ring-gray-400"
-                  required
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+                )}
               </div>
 
               {error && (
